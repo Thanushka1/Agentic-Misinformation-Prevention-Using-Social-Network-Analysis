@@ -1,0 +1,6 @@
+streamlit>=1.28
+networkx
+pandas
+numpy
+matplotlib
+seaborn
