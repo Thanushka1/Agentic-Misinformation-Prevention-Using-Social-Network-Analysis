@@ -50,7 +50,7 @@ def get_network(choice, k):
 try:
     net = get_network(data_choice, bet_k)
 except Exception as e:
-    st.error(f"Could not load the network: {e}. Check that data/twitter_combined.csv exists, or choose the demo network.")
+    st.error(f"Could not load the network: {e}. Check that data/twitter_combined.csv exists in the data folder.")
     st.stop()
 
 @st.cache_data(show_spinner="Calibrating spread probability...")
@@ -63,10 +63,24 @@ def get_comms(choice, k):
 
 P = get_p(data_choice, bet_k, target, n_sources)
 strategies = core.STRATEGIES
-tab_net, tab_exp, tab_time, tab_vis, tab_who, tab_how, tab_sens = st.tabs(
-    ["1. Network & misinformation", "2. Strategy comparison", "3. Spread over time",
+tab_about, tab_net, tab_exp, tab_time, tab_vis, tab_who, tab_how, tab_sens = st.tabs(
+    ["0. About", "1. Network & misinformation", "2. Strategy comparison", "3. Spread over time",
      "4. Network picture & agents", "5. Who is affected", "6. Where & how it spreads", "7. Sensitivity"])
 
+with tab_about:
+    st.subheader("Problem statement")
+    st.write("Fake news spreads through follower networks, and fact-checkers can check only a limited number of users. "
+             "Which users should be fact-checked first to reduce the spread the most?")
+    st.subheader("Dataset collection")
+    st.write("Network: SNAP Twitter follower network (Leskovec and McAuley), 81,306 users. "
+             "Misinformation: 25 synthetic fake claims posted by real high-follower users, with a fact-check, prevention action "
+             "and per-user susceptibility columns added to the Twitter users.")
+    st.subheader("SNA tool and features used")
+    st.write("Tool: NetworkX (Python). Features: directed graph, degree centrality, betweenness centrality, "
+             "Louvain community detection, BFS neighbourhoods and graph layout.")
+    st.subheader("AI approach")
+    st.write("Agentic AI: the Multi-Agent System reacts to the spread round by round. Multi-agent AI: a Monitoring Agent, "
+             "an Analyst Agent and an Intervention Agent, each with a separate job.")
 # ------------------------------------------------------------------ tab 1
 with tab_net:
     st.subheader("Network overview")
@@ -111,7 +125,7 @@ with tab_net:
         st.caption("A follower is affected with probability P x claim emotion x susceptibility, and 1.5x higher when the claim is in "
                    "their vulnerable topic. The fake tweets and user attributes are synthetic; the users and followers are real SNAP data.")
     else:
-        st.warning("Misinformation dataset not used (demo network, or data/twitter_users_misinfo.csv is missing). Sources are picked at random.")
+                st.warning("Misinformation dataset not used (data/twitter_users_misinfo.csv is missing). Sources are picked at random.")
 
 # ------------------------------------------------------------------ tab 2
 with tab_exp:
